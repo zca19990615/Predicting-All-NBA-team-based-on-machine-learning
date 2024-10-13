@@ -191,3 +191,45 @@ print(head(prediction_results))
 # 打印完整的预测结果数据框
 print("Complete Prediction Results:")
 print(prediction_results)
+
+
+
+
+# 读取测试数据
+# 注意：请确保测试数据文件路径和文件名是正确的
+test_data <- read_csv("C:\\Users\\61967\\Desktop\\机器学习2\\new\\2023-2024.(1)csv.csv") # 此处替换为实际测试数据文件的路径和文件名
+
+# 假设测试数据集也包含'Injured'列，即实际结果，需要在预测之前将其转为因子类型
+test_data$Injured <- as.factor(test_data$Injured)
+
+# 保存测试集的实际结果，以便与预测结果进行比较
+actual_outcomes <- test_data$Injured
+
+# 移除测试数据集的'Injured'列，因为这是我们要预测的
+test_data <- test_data %>% select(-Injured)
+
+# 使用训练好的模型在测试数据上进行预测
+test_predictions <- predict(gbm_model, test_data)
+
+# 创建一个数据框以比较预测结果和实际结果
+# 假设测试数据集中有一个名为'Player'的列，它包含球员的名字
+prediction_results <- data.frame(
+  Player = test_data$PER, # 请替换为测试数据集中包含球员名字的字段名
+  Predicted = as.numeric(test_predictions),
+  Outcome = as.numeric(actual_outcomes),
+  All_NBA_Team = ifelse(actual_outcomes == "1", "Yes", "No")
+)
+
+# 计算混淆矩阵及评估指标
+conf_matrix <- confusionMatrix(as.factor(test_predictions), actual_outcomes)
+
+# 打印混淆矩阵及评估指标
+print(conf_matrix)
+print(conf_matrix$byClass)
+
+# 查看预测结果数据框的头部
+head(prediction_results)
+
+# 打印完整的预测结果数据框
+print(prediction_results)
+
