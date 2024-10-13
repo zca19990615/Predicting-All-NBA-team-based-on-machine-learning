@@ -178,5 +178,3 @@ ggplot(plot_data, aes(x = Metric, y = Mean, color = Set)) +
        y = "Metric Value", x = "Performance Metric") +
   theme_minimal()
 
-
-
